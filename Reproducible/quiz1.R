@@ -1,5 +1,5 @@
-setwd("D:/Cousera/Reproducible")
-getwd()
+#setwd("D:/Cousera/Reproducible")
+#getwd()
 # Load data
 if (!file.exists("activity.csv") )
 {
@@ -13,6 +13,8 @@ data <- read.csv("activity.csv")
 #Calculate the total number of steps taken per day
 steps_by_day <- aggregate(steps ~ date, data, sum)
 hist(steps_by_day$steps, main = paste("Total Steps Each Day"), col="green",xlab="Number of Steps")
+
+#Mean and median number of steps taken each day
 rmean <- mean(steps_by_day$steps)
 rmean
 rmedian <- median(steps_by_day$steps)
@@ -24,7 +26,7 @@ plot(steps_by_interval$interval,steps_by_interval$steps, type="l", xlab="Interva
 max_interval <- steps_by_interval[which.max(steps_by_interval$steps),1]
 max_interval
 
-#
+#Code to describe and show a strategy for imputing missing data
 NATotal <- sum(!complete.cases(data))
 NATotal
 StepsAverage <- aggregate(steps ~ interval, data = data, FUN = mean)
@@ -42,9 +44,12 @@ new_activity <- data
 new_activity$steps <- fillNA
 StepsTotalUnion <- aggregate(steps ~ date, data = new_activity, sum, na.rm = TRUE)
 hist(StepsTotalUnion$steps, main = paste("Total Steps Each Day"), col="blue", xlab="Number of Steps")
+
+
 #Create Histogram to show difference. 
 hist(steps_by_day$steps, main = paste("Total Steps Each Day"), col="green", xlab="Number of Steps", add=T)
 legend("topright", c("Imputed", "Non-imputed"), col=c("blue", "green"), lwd=10)
+
 rmeantotal <- mean(StepsTotalUnion$steps)
 rmeantotal
 rmediantotal <- median(StepsTotalUnion$steps)

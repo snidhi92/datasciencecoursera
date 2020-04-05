@@ -1,4 +1,4 @@
-Quiz1 conatians the code for the assignment.
+Quiz1 contains the code for the assignment.
 
 Rplot1 is the Histogram of the total number of steps taken each day
 Rplot2 is Time series plot of the average number of steps taken

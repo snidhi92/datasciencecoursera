@@ -1,0 +1,99 @@
+---
+title: "Coursera-Practical-ML-Assignment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Practical ML Assignment: Prediction Assignment
+
+```{r}
+# install.packages("caret"); install.packages("randomForest"); install.packages("rpart"); 
+library(lattice); library(ggplot2); library(caret); library(randomForest); library(rpart); library(rpart.plot);
+```
+
+#### Goal
+The goal of your project is to predict the manner in which they did the exercise. This is the "classe" variable in the training set. 
+## Background
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.
+
+### Data
+The data for this project come from this source: http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har
+
+## Data cleaning
+
+```{r}
+data <- read.csv("pml-training.csv")
+colnames(data)
+summary(data)
+```
+splitting  the training data into training and testing partitions and using the pml-testing.csv as a validation sample.
+
+
+```{r}
+set.seed(1111)
+train <- createDataPartition(y=data$classe,p=.70,list=F)
+training <- data[train,]
+testing <- data[-train,]
+```
+Deleting columns with missing data
+
+```{r}
+#exclude identifier, timestamp, and window data (they cannot be used for prediction)
+Cl <- grep("name|timestamp|window|X", colnames(training), value=F) 
+trainingCl <- training[,-Cl]
+#select variables with high (over 95%) missing data --> exclude them from the analysis
+trainingCl[trainingCl==""] <- NA
+NArate <- apply(trainingCl, 2, function(x) sum(is.na(x)))/nrow(trainingCl)
+trainingCl <- trainingCl[!(NArate>0.95)]
+summary(trainingCl)
+
+```
+
+### PCA
+
+```{r}
+preProc <- preProcess(trainingCl[,1:52],method="pca",thresh=.8) #12 components are required
+preProc <- preProcess(trainingCl[,1:52],method="pca",thresh=.9) #18 components are required
+preProc <- preProcess(trainingCl[,1:52],method="pca",thresh=.95) #25 components are required
+
+preProc <- preProcess(trainingCl[,1:52],method="pca",pcaComp=25) 
+preProc$rotation
+trainingPC <- predict(preProc,trainingCl[,1:52])
+```
+
+### Random Forest
+
+```{r}
+modFitRF <- randomForest(trainingCl$classe ~ .,   data=trainingPC, do.trace=F)
+print(modFitRF) # view results 
+importance(modFitRF) # importance of each predictor
+```
+
+## Assessment
+```{r}
+testingCl <- testing[,-Cl]
+testingCl[testingCl==""] <- NA
+NArate <- apply(testingCl, 2, function(x) sum(is.na(x)))/nrow(testingCl)
+testingCl <- testingCl[!(NArate>0.95)]
+testingPC <- predict(preProc,testingCl[,1:52])
+confusionMatrix(testingCl$classe,predict(modFitRF,testingPC))
+```
+
+## Prediction
+
+```{r}
+testdata <- read.csv("pml-testing.csv")
+testdataCl <- testdata[,-Cl]
+testdataCl[testdataCl==""] <- NA
+NArate <- apply(testdataCl, 2, function(x) sum(is.na(x)))/nrow(testdataCl)
+testdataCl <- testdataCl[!(NArate>0.95)]
+testdataPC <- predict(preProc,testdataCl[,1:52])
+testdataCl$classe <- predict(modFitRF,testdataPC)
+```
+
+## COnclusion
+Based on the data available, I am able to fit a reasonably sound model with a high degree of accuracy in predicting out of sample observations. One assumption that I used in this work that could be relaxed in future work would be to remove the section of data preparation where I limit features to those that are non-zero in the validation sample. For example, when fitting a model on all training data columns, some features that are all missing in the validation sample do included non-zero items in the training sample and are used in the decision tree models.
+

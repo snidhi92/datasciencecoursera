@@ -1,0 +1,36 @@
+---
+title: "Data_Products_Week2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Nidhi
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+
+
+## Peer-graded Assignment: R Markdown and Leaflet
+
+
+Create a web page using R Markdown that features a map created with Leaflet.
+Host your webpage on either GitHub Pages, RPubs, or NeoCities.
+
+ Webpage must contain the date that you created the document, and it must contain a map created with Leaflet. We would love to see you show off your creativity!
+
+
+```{r}
+## installing library
+library(leaflet)
+library(htmltools)
+```
+
+
+
+
+```{r my_map}
+my_map <- leaflet() %>% addTiles() 
+my_map <- my_map %>% addMarkers(lat=28.535517, lng= 77.391029, popup="My Current Address")
+my_map
+```
+

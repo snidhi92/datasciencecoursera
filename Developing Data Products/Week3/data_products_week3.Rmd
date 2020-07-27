@@ -1,0 +1,37 @@
+---
+title: "data_products_week3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown Presentation & Plotly
+### Nidhi
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+
+
+Using R Markdown that features a plot created with Plotly. Hosted webpage on RPubs
+
+```{r}
+
+## installing library
+library(plotly)
+## reading data
+data <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/school_earnings.csv")
+```
+
+## Plots
+
+
+```{r}
+fig <- plot_ly(data, x = ~Women, y = ~Men, text = ~School, type = 'scatter', mode = 'markers',
+        marker = list(size = ~Gap, opacity = 0.5))
+fig <- fig %>% layout(title = 'Gender Gap in Earnings per University',
+         xaxis = list(showgrid = FALSE),
+         yaxis = list(showgrid = FALSE))
+
+fig
+```
+

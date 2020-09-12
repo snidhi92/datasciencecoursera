@@ -1,0 +1,13 @@
+name: Capstone
+title: Capstone
+username:
+account: nidhi31
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2789215
+bundleId: 3620816
+url: https://nidhi31.shinyapps.io/Capstone/
+when: 1599875581.03336
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: ppt.md|ppt.Rpres|ppt-figure/unnamed-chunk-2-1.png

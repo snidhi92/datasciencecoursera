@@ -92,9 +92,9 @@ if(preprocessing)
 if(!(preprocessing))
 {
   # Load the N-gram frequencies directly from my GitHub account while running Shiny
-  load(url("https://github.com/Papazian/Capstone/raw/master/aFreq_2.RData"))
-  load(url("https://github.com/Papazian/Capstone/raw/master/aFreq_3.RData"))
-  load(url("https://github.com/Papazian/Capstone/raw/master/aFreq_4.RData"))
+  load(url("https://raw.github.com/snidhi92/datasciencecoursera/master/Capstone/Freq_2.RData"))
+  load(url("https://raw.github.com/snidhi92/datasciencecoursera/master/Capstone/Freq_3.RData"))
+  load(url("https://raw.github.com/snidhi92/datasciencecoursera/master/Capstone/Freq_4.RData"))
 }
 
 
@@ -105,7 +105,7 @@ library(magrittr)
 library(stringr)
 
 # Define my function to take raw text input and return the predicted next word
-Papazian <- function(raw) 
+DummyFn <- function(raw) 
 {
   sentence <- tolower(raw) %>%
     removePunctuation %>%
@@ -208,7 +208,7 @@ shinyServer(function(input, output)
     
     output$textOut <- renderText(
       { 
-        paste("", Papazian(input$textIn))
+        paste("", DummyFn(input$textIn))
       })
     
   })

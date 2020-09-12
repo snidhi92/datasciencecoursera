@@ -13,7 +13,7 @@ shinyUI(fluidPage(
     h3("Text output: "),
     textOutput("textOut"),
     h3("Source code: "),
-    h5("https://github.com/Papazian/Capstone")
+    h5("https://github.com/snidhi92/datasciencecoursera/tree/master/Capstone")
   )
 )
 )
